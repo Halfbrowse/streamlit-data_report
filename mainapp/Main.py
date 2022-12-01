@@ -1,8 +1,8 @@
 import streamlit as st
 import time
+from streamlit_extras.switch_page_button import switch_page
 
 st.header("Welcome to DataReports")
-st.caption("Please allow the app to fully load before navigating to another page.")
 
 bar = st.progress(0)
 
@@ -13,12 +13,13 @@ def progress_bar():
         bar.progress(i)
 
 
-progress_bar()
-
-
 st.subheader("The how to's and whats of DataReports.")
 
 
-st.info("Once ready, navigate to one of the pages on the sidebar.")
-st.info(" Ensure that your media is either in .csv or .xlsx format")
-st.info(" Load your data to the app and let the magic happen.")
+st.info(
+    """Once ready, navigate to one of the pages on the sidebar.  \n Ensure that your media is either in .csv or .xlsx format  \n Load your data to the app and let the magic happen."""
+)
+
+
+progress_bar()
+# switch_page("Report")
