@@ -86,12 +86,24 @@ try:
                 df = xl_file.parse(sheet_name)
 
             # generate report
+            if df is not None:
+                button1 = st.button("Generate Report")
 
-            pr = ProfileReport(
-                df, minimal=minimal, dark_mode=dark_mode, orange_mode=orange_mode
-            )
+                if button1:
 
-            button = st.button(st_profile_report(pr, navbar=True))
+                    pr = ProfileReport(
+                        df,
+                        minimal=minimal,
+                        dark_mode=dark_mode,
+                        orange_mode=orange_mode,
+                    )
+                    st.download_button(
+                        label="Download Report as CSV",
+                        data=pr,
+                        file_name="streamlit_report",
+                        mime="text/csv",
+                    )
+                    button = st.button(st_profile_report(pr, navbar=True))
 
         else:
             st.error("Please only upload a csv or excel file")

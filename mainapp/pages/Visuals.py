@@ -34,108 +34,110 @@ if button_4:
 
 st.markdown("---")
 
+st.header("Pie and Bar charts")
 
 st.markdown("---")
 
 
-with st.container():
-    st.write("Find the price and location distribution (pie and bar)")
-    value_counts = df["Price"].value_counts()
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Pie Chat")
-        # draw pie chart
-        fig, ax = plt.subplots()
-        ax.pie(value_counts, autopct="%0.2f%%")
-        st.pyplot(fig)
-    with col2:
-        st.subheader("Bar Chart")
-        # draw bar lot
-        fig, ax = plt.subplots()
-        ax.bar(value_counts.index, value_counts)
-        st.pyplot(fig)
+color_option = st.selectbox(
+    "Select the category to colour",
+    ("Suburb", "Rooms", "Landsize", "CouncilArea"),
+    key="qwerty",
+)
+fig = px.scatter(data_frame=df, x="Price", y="Regionname", color=color_option)
+st.plotly_chart(fig)
 
 
-with st.expander("Click here to display value counts"):
-    st.dataframe(value_counts)
+st.subheader("Sunburst chart on features")
+path = st.multiselect(
+    "Select the category features", ("Suburb", "Rooms", "Landsize", "CouncilArea")
+)
+fig = px.sunburst(data_frame=df, path=path)
+st.plotly_chart(fig)
+
+fig = px.histogram(data_frame=df, x="Price")
+st.plotly_chart(fig)
+
+st.subheader("Draw a Histogram for Price and Colour by Region")
+
+fig = px.histogram(data_frame=df, x="Price", color="Regionname")
+st.plotly_chart(fig)
 
 
+tab1 = st.tabs(["More Visuals"])
 st.markdown("---")
-# Widgets, dynamically change visualisations
-data_types = df.dtypes
-cat_cols = tuple(data_types[data_types == "object"].index)
-with st.container():
-    feature = st.selectbox(
-        "Select the feature you want to display on the charts", cat_cols
-    )
+with tab1:
+    # Widgets, dynamically change visualisations
+    data_types = df.dtypes
+    cat_cols = tuple(data_types[data_types == "object"].index)
+    with st.container():
+        feature = st.selectbox(
+            "Select the feature you want to display on the charts", cat_cols
+        )
 
-    value_counts = df[feature].value_counts()
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Pie Chat")
-        # draw pie chart
+        value_counts = df[feature].value_counts()
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Pie Chat")
+            # draw pie chart
+            fig, ax = plt.subplots()
+            ax.pie(value_counts, autopct="%0.2f%%", labels=value_counts.index)
+            st.pyplot(fig)
+        with col2:
+            st.subheader("Bar Chart")
+            # draw bar lot
+            fig, ax = plt.subplots()
+            ax.bar(value_counts.index, value_counts)
+            st.pyplot(fig)
+
+    with st.expander("Click here to display value counts"):
+        st.dataframe(value_counts)
+
+    st.markdown("---")
+
+    with st.container():
+        st.subheader("Find the distribution for price and bedroom spread")
+
         fig, ax = plt.subplots()
-        ax.pie(value_counts, autopct="%0.2f%%", labels=value_counts.index)
+        sns.boxplot(x="Price", y="Bedroom2", data=df, ax=ax)
         st.pyplot(fig)
-    with col2:
-        st.subheader("Bar Chart")
-        # draw bar lot
+
+    st.markdown("---")
+
+    st.subheader("Allow users to pick and choose the chart type and data type")
+    with st.container():
+        # include all category features (multi select)
+        # give options to bar line and area chart
+        # stacked or not (radio)
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            group_cols = st.multiselect("select the features", cat_cols)
+            features = group_cols
+            n_features = len(features)
+
+        with c2:
+            chart_type = st.selectbox("Select Type", ("bar", "area", "line"))
+
+        with c3:
+            stack_options = st.radio("Stacked", ("Yes", "No"))
+            if stack_options == "Yes":
+                stacked = True
+            else:
+                stacked = False
+
+        feature = ["price"]
+        select_cols = features + feature
+        avg_total = df[select_cols].groupby(features).mean()
+        if n_features > 1:
+            for i in range(n_features - 1):
+                avg_total = avg_total.unstack()
+        # visualisation
         fig, ax = plt.subplots()
-        ax.bar(value_counts.index, value_counts)
+        avg_total.plot(kind=chart_type, ax=ax, stacked=stacked)
+        ax.legend(loc="center left", bbox_to_anchor=(1.0, 0.5))
+        ax.set_ylabel("Average Total Price")
         st.pyplot(fig)
 
-
-with st.expander("Click here to display value counts"):
-    st.dataframe(value_counts)
-
-
-st.markdown("---")
-
-with st.container():
-    st.subheader("Find the distribution for price and bedroom spread")
-
-    fig, ax = plt.subplots()
-    sns.boxplot(x="price", y="Bedroom2", data=df, ax=ax)
-    st.pyplot(fig)
-
-
-st.markdown("---")
-
-
-st.subheader("Allow users to pick and choose the chart type and data type")
-with st.container():
-    # include all category features (multi select)
-    # give options to bar line and area chart
-    # stacked or not (radio)
-
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        group_cols = st.multiselect("select the features", cat_cols)
-        features = group_cols
-        n_features = len(features)
-
-    with c2:
-        chart_type = st.selectbox("Select Type", ("bar", "area", "line"))
-
-    with c3:
-        stack_options = st.radio("Stacked", ("Yes", "No"))
-        if stack_options == "Yes":
-            stacked = True
-        else:
-            stacked = False
-
-    feature = ["price"]
-    select_cols = features + feature
-    avg_total = df[select_cols].groupby(features).mean()
-    if n_features > 1:
-        for i in range(n_features - 1):
-            avg_total = avg_total.unstack()
-    # visualisation
-    fig, ax = plt.subplots()
-    avg_total.plot(kind=chart_type, ax=ax, stacked=stacked)
-    ax.legend(loc="center left", bbox_to_anchor=(1.0, 0.5))
-    ax.set_ylabel("Average Total Price")
-    st.pyplot(fig)
-
-    with st.expander("Click to see values"):
-        st.dataframe(avg_total)
+        with st.expander("Click to see values"):
+            st.dataframe(avg_total)
