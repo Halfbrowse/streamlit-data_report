@@ -22,4 +22,5 @@ st.info(
 
 
 progress_bar()
+
 # switch_page("Report")
