@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-from streamlit_extras.switch_page_button import switch_page
+
 
 st.header("Welcome to DataReports")
 
@@ -22,5 +22,3 @@ st.info(
 
 
 progress_bar()
-
-# switch_page("Report")
