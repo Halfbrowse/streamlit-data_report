@@ -41,6 +41,8 @@ decorator==5.1.1
     # via validators
 entrypoints==0.4
     # via altair
+et-xmlfile==1.1.0
+    # via openpyxl
 fonttools==4.38.0
     # via matplotlib
 gitdb==4.0.10
@@ -103,6 +105,8 @@ numpy==1.23.5
     #   streamlit
     #   visions
     #   yfinance
+openpyxl==3.0.10
+    # via -r ./requirements.in
 packaging==21.3
     # via
     #   build
