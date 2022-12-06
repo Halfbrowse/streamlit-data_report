@@ -1,11 +1,8 @@
 import streamlit as st
-import os
-import sys
-import numpy as np
+
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 st.header("Please indicate which visualisations you would like to be rendered.")
 tab1, tab2 = st.tabs(["Visuals", "More Visuals"])
