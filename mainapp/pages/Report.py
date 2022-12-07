@@ -4,6 +4,7 @@ from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 import sys
 import os
+from Main import progress_bar
 
 st.set_page_config(page_title="Data Profilers", layout="wide")
 
@@ -88,7 +89,7 @@ try:
             # generate report
             if df is not None:
                 button1 = st.button("Generate Report")
-
+                progress_bar()
                 if button1:
 
                     pr = ProfileReport(
