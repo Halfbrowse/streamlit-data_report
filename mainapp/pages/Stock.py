@@ -1,10 +1,4 @@
 import streamlit as st
-import os
-import sys
-import numpy as np
-import pandas as pd
-import plotly.express as px
-import matplotlib.pyplot as plt
 import yfinance as yf
 from datetime import datetime
 
